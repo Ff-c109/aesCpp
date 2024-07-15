@@ -139,52 +139,31 @@ void AESDecrypt(unsigned char * encryptedMessage, unsigned char * expandedKey, u
 }
 
 int main() {
-
-	cout << "=============================" << endl;
-	cout << " 128-bit AES Decryption Tool " << endl;
-	cout << "=============================" << endl;
-
 	// Read in the message from message.aes
-	string msgstr;
+	string msgstr = "";
+	int msgstrc;
 	ifstream infile;
-	infile.open("message.aes", ios::in | ios::binary);
-
-	if (infile.is_open())
-	{
-		getline(infile, msgstr); // The first line of file is the message
-		cout << "Read in encrypted message from message.aes" << endl;
-		infile.close();
+	while((msgstrc = getchar()), msgstrc != -1) {
+		msgstr += msgstrc;
 	}
-
-	else cout << "Unable to open file";
-
 	char * msg = new char[msgstr.size()+1];
-
 	strcpy(msg, msgstr.c_str());
-
 	int n = strlen((const char*)msg);
-
 	unsigned char * encryptedMessage = new unsigned char[n];
 	for (int i = 0; i < n; i++) {
 		encryptedMessage[i] = (unsigned char)msg[i];
 	}
-
 	// Free memory
 	delete[] msg;
-
 	// Read in the key
 	string keystr;
 	ifstream keyfile;
 	keyfile.open("keyfile", ios::in | ios::binary);
-
 	if (keyfile.is_open())
 	{
 		getline(keyfile, keystr); // The first line of file should be the key
-		cout << "Read in the 128-bit key from keyfile" << endl;
 		keyfile.close();
 	}
-
-	else cout << "Unable to open file";
 
 	istringstream hex_chars_stream(keystr);
 	unsigned char key[16];
@@ -208,17 +187,8 @@ int main() {
 		AESDecrypt(encryptedMessage + i, expandedKey, decryptedMessage + i);
 	}
 
-	cout << "Decrypted message in hex:" << endl;
-	for (int i = 0; i < messageLen; i++) {
-		cout << hex << (int)decryptedMessage[i];
-		cout << " ";
-	}
-	cout << endl;
-	cout << "Decrypted message: ";
 	for (int i = 0; i < messageLen; i++) {
 		cout << decryptedMessage[i];
 	}
-	cout << endl;
-
 	return 0;
 }
